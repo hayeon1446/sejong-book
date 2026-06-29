@@ -344,7 +344,7 @@
       <input type="email" id="emailInput" placeholder="이메일 주소를 입력하세요" autocomplete="email" />
       <button onclick="submitEmail()">알림 신청</button>
     </div>
-    <p class="alert-success" id="alertSuccess">&#10003; 신청 완료. 출간일에 가장 먼저 연락드릴게요.</p>
+    <p class="alert-success" id="alertSuccess">&#10003; 구글 폼이 열렸어요. 이메일을 제출하시면 출간 즉시 알려드릴게요.</p>
   </div>
 
   <!-- 책 소개 -->
@@ -475,6 +475,8 @@
 </div>
 
 <script>
+  const FORM_URL = 'https://forms.gle/RLGmvDkt34ScizgC9';
+
   function submitEmail() {
     const input = document.getElementById('emailInput');
     const form = document.getElementById('alertForm');
@@ -485,7 +487,7 @@
       input.focus();
       return;
     }
-    // 여기에 실제 이메일 수집 API 연결 (Google Forms, Mailchimp 등)
+    window.open(FORM_URL, '_blank');
     form.style.display = 'none';
     success.style.display = 'block';
   }
