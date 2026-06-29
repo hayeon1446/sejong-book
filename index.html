@@ -305,6 +305,26 @@
     .link-label { font-size: 13px; font-weight: 600; color: var(--text-primary); }
     .link-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
 
+    /* LECTURE BTN */
+    .lecture-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 1.25rem;
+      padding: 0.9rem 1.15rem;
+      background: var(--accent-bg);
+      border: 0.5px solid var(--accent);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--accent-text);
+      font-size: 14px;
+      font-weight: 600;
+      transition: opacity 0.15s;
+    }
+    .lecture-btn:hover { opacity: 0.8; }
+    .lecture-btn svg { width: 20px; height: 20px; fill: var(--accent); flex-shrink: 0; }
+    .lecture-btn .btn-arrow { margin-left: auto; font-size: 16px; }
+
     /* FOOTER */
     .footer {
       padding: 2rem 0 0;
@@ -427,6 +447,12 @@
     <p class="body-text">
       조선왕조실록을 8년간 직접 읽어온 인문학 강사이자 콘텐츠 크리에이터. 세종대왕 탄신 기념 국회 특강, 한글날 광화문 훈민정음 강의, 경복궁·영릉 역사 투어를 운영하며 세종의 철학을 현장에서 전달하고 있습니다. "실록은 쉽게, 깨달음은 깊게"를 모토로 기업과 기관 강단에 서고 있습니다.
     </p>
+
+    <a class="lecture-btn" href="https://youtu.be/O8aDbmOqMs4" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"></path></svg>
+      강연 영상 보기 — 국회 특강 (15분)
+      <span class="btn-arrow">→</span>
+    </a>
 
     <div class="link-grid">
       <a class="link-card" href="https://www.youtube.com/@thekingsleadership" target="_blank" rel="noopener">
