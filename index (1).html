@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>세종의 질문 — 배하연</title>
+  <meta name="description" content="물어볼 사람이 없을 때, 세종에게 물었습니다. 조선왕조실록을 8년간 읽은 배하연의 첫 번째 책." />
+  <meta property="og:title" content="세종의 질문 — 배하연" />
+  <meta property="og:description" content="당신 곁에는 물어볼 어른이 있습니까. 2026년 한글날 출간 예정." />
+  <meta property="og:type" content="website" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fafaf8;
+      --surface: #f4f3f0;
+      --border: #e4e3df;
+      --border-strong: #c8c7c2;
+      --text-primary: #1a1a18;
+      --text-secondary: #4a4a46;
+      --text-muted: #888884;
+      --accent: #2d5a8e;
+      --accent-bg: #eef3f9;
+      --accent-text: #1e3f64;
+      --radius: 8px;
+      --font-sans: 'Pretendard Variable', 'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      --font-voice: 'Noto Serif KR', 'Nanum Myeongjo', Georgia, serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #141413;
+        --surface: #1e1e1c;
+        --border: #2e2e2b;
+        --border-strong: #444441;
+        --text-primary: #f0f0ec;
+        --text-secondary: #a8a8a2;
+        --text-muted: #666662;
+        --accent: #6b9fd4;
+        --accent-bg: #1a2535;
+        --accent-text: #9dc3e8;
+      }
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text-primary);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 24px 5rem;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 4rem 0 3rem;
+      border-bottom: 0.5px solid var(--border);
+      text-align: center;
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 1.4rem;
+    }
+    .hero-title {
+      font-family: var(--font-voice);
+      font-size: clamp(2.2rem, 6vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+    .hero-subtitle {
+      font-family: var(--font-voice);
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 2.25rem;
+    }
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .hero-meta span { font-size: 13px; color: var(--text-muted); }
+    .hero-meta strong { color: var(--text-secondary); font-weight: 500; }
+
+    /* ALERT */
+    .alert-box {
+      margin: 2.5rem 0;
+      background: var(--accent-bg);
+      border: 0.5px solid var(--accent);
+      border-radius: 12px;
+      padding: 1.75rem 1.5rem;
+    }
+    .alert-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .alert-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+    }
+    .alert-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 1.1rem;
+      line-height: 1.6;
+    }
+    .alert-form { display: flex; gap: 8px; flex-wrap: wrap; }
+    .alert-form input {
+      flex: 1;
+      min-width: 200px;
+      height: 40px;
+      border: 0.5px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 0 14px;
+      font-size: 14px;
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .alert-form input::placeholder { color: var(--text-muted); }
+    .alert-form input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+    }
+    .alert-form button {
+      height: 40px;
+      padding: 0 20px;
+      border-radius: var(--radius);
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .alert-form button:hover { opacity: 0.85; }
+    .alert-success {
+      display: none;
+      font-size: 14px;
+      color: #2d7a4f;
+      margin-top: 0.75rem;
+    }
+    @media (prefers-color-scheme: dark) {
+      .alert-success { color: #6ec99a; }
+    }
+
+    /* SECTIONS */
+    .section { padding: 2.75rem 0; border-top: 0.5px solid var(--border); }
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.85rem;
+      line-height: 1.4;
+    }
+    .body-text {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.85;
+    }
+
+    /* PULLQUOTE */
+    .pullquote {
+      font-family: var(--font-voice);
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      line-height: 1.75;
+      border-left: 2px solid var(--accent);
+      padding: 0.6rem 1.1rem;
+      margin: 1.5rem 0;
+    }
+
+    /* CHAPTER LIST */
+    .chapter-list {
+      margin-top: 1.5rem;
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .chapter-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 1rem 1.15rem;
+      background: var(--bg);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .chapter-item:last-child { border-bottom: none; }
+    .chapter-item:nth-child(odd) { background: var(--surface); }
+    .ch-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-text);
+      background: var(--accent-bg);
+      border-radius: 4px;
+      padding: 2px 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .ch-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    .ch-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      line-height: 1.55;
+    }
+
+    /* AUTHOR */
+    .author-row {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .author-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--accent-bg);
+      border: 0.5px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent-text);
+      flex-shrink: 0;
+    }
+    .author-name { font-size: 17px; font-weight: 600; color: var(--text-primary); }
+    .author-role { font-size: 13px; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
+
+    /* LINKS */
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
+      gap: 10px;
+      margin-top: 1.5rem;
+    }
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.85rem 1rem;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 500;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .link-card:hover {
+      border-color: var(--border-strong);
+      background: var(--bg);
+    }
+    .link-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .link-icon svg { width: 18px; height: 18px; fill: var(--text-muted); }
+    .link-label { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .link-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+    /* FOOTER */
+    .footer {
+      padding: 2rem 0 0;
+      border-top: 0.5px solid var(--border);
+      text-align: center;
+    }
+    .footer p { font-size: 12px; color: var(--text-muted); line-height: 1.8; }
+
+    @media (max-width: 480px) {
+      .hero { padding: 3rem 0 2.5rem; }
+      .alert-form { flex-direction: column; }
+      .alert-form input, .alert-form button { width: 100%; min-width: unset; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <p class="hero-eyebrow">2026 · 한글날 출간 예정</p>
+    <h1 class="hero-title">세종의 질문</h1>
+    <p class="hero-subtitle">당신 곁에는 물어볼 어른이 있습니까</p>
+    <div class="hero-meta">
+      <span><strong>배하연</strong> 지음</span>
+      <span><strong>2026. 10. 09</strong> 출간</span>
+      <span><strong>실록 쾌선생</strong></span>
+    </div>
+  </header>
+
+  <!-- 출간 알림 -->
+  <div class="alert-box">
+    <p class="alert-eyebrow">&#x1F514; 출간 알림 신청</p>
+    <h2 class="alert-title">가장 먼저 소식 받기</h2>
+    <p class="alert-desc">출간 즉시 이메일로 알려드립니다. 미리 신청해두세요.</p>
+    <div class="alert-form" id="alertForm">
+      <input type="email" id="emailInput" placeholder="이메일 주소를 입력하세요" autocomplete="email" />
+      <button onclick="submitEmail()">알림 신청</button>
+    </div>
+    <p class="alert-success" id="alertSuccess">&#10003; 신청 완료. 출간일에 가장 먼저 연락드릴게요.</p>
+  </div>
+
+  <!-- 책 소개 -->
+  <section class="section">
+    <p class="eyebrow">이 책에 대하여</p>
+    <h2 class="section-title">물어볼 사람이 없을 때, 세종에게 물었습니다</h2>
+    <div class="pullquote">
+      "정답은 넘치는데 왜 나는 여전히 흔들릴까.<br>
+      저는 그 질문을 들고 세종실록 1만 800페이지를 읽었습니다."
+    </div>
+    <p class="body-text">
+      조선왕조실록을 8년간 직접 읽은 저자가 발견한 것은 위대한 왕의 업적이 아니었습니다. 모른다고 말하는 세종, 신하에게 다시 묻는 세종, 바로 결론 내리지 않고 끝까지 살피는 세종. 이 책은 혼자 결정해야 하는 순간마다 세종이 먼저 무엇을 물었는지를 오늘의 자리로 데려옵니다.
+    </p>
+    <p class="body-text" style="margin-top: 1rem;">
+      리더, 강사, 창작자, 1인 사업가 — 누군가를 이끌고, 무언가를 결정하고, 관계 안에서 기준을 세워야 하는 사람이라면 이 책은 당신의 책상 위에 놓일 수 있습니다.
+    </p>
+  </section>
+
+  <!-- 목차 -->
+  <section class="section">
+    <p class="eyebrow">목차</p>
+    <h2 class="section-title">어느 장부터 펼쳐도 괜찮습니다</h2>
+    <p class="body-text">결정이 힘들면 1장부터, 사람 때문에 지쳤다면 2장부터, 말이 닿지 않아 답답하다면 3장부터. 성과를 내는 동안 나를 잃어가고 있다면 5장을 펼치세요.</p>
+    <div class="chapter-list">
+      <div class="chapter-item">
+        <span class="ch-badge">1장</span>
+        <div>
+          <div class="ch-title">중요한 결정은 결국 혼자 해야 한다</div>
+          <div class="ch-sub">왜 나는 여전히 흔들릴까 · 물어볼 사람이 없을 때 나는 어디로 갔나 · 세종도 처음부터 세종은 아니었다 · 기준 없이 결정했을 때 무너지는 것들</div>
+        </div>
+      </div>
+      <div class="chapter-item">
+        <span class="ch-badge">2장</span>
+        <div>
+          <div class="ch-title">사람을 잘 들이는 일은 왜 가장 어려울까</div>
+          <div class="ch-sub">누구를 믿고 누구와 함께 갈 것인가 · 화려한 직함보다 먼저 봐야 할 것 · 나를 불편하게 한 사람이 결과물을 바꿨다 · 비전보다 밥그릇이 먼저다</div>
+        </div>
+      </div>
+      <div class="chapter-item">
+        <span class="ch-badge">3장</span>
+        <div>
+          <div class="ch-title">왜 내 진심은 사람들에게 닿지 않을까</div>
+          <div class="ch-sub">말이 통하는 자리의 기준 · 좋은 말이 상처가 되는 순간 · 선을 그어야 관계가 오래 간다 · 리더는 강해 보여야만 할까</div>
+        </div>
+      </div>
+      <div class="chapter-item">
+        <span class="ch-badge">4장</span>
+        <div>
+          <div class="ch-title">공부는 많이 했는데 왜 결과는 그대로일까</div>
+          <div class="ch-sub">배움의 쓰임과 결과의 기준 · 잘 만드는 것과 쓰게 하는 것의 차이 · 혼자 똑똑해질수록 왜 문제는 안 보일까 · 다들 안 된다고 할 때 무엇을 붙잡을까</div>
+        </div>
+      </div>
+      <div class="chapter-item">
+        <span class="ch-badge">5장</span>
+        <div>
+          <div class="ch-title">세종의 성과 뒤에는 무엇이 있었을까</div>
+          <div class="ch-sub">나를 잃지 않는 기준 · 세종도 무너진 적이 있었을까 · 최선을 다했는데 왜 자꾸 내 탓을 할까 · 왜 세종에게도 완벽한 결말을 기대했을까</div>
+        </div>
+      </div>
+      <div class="chapter-item">
+        <span class="ch-badge">6장</span>
+        <div>
+          <div class="ch-title">당신의 책상 위에 세종을 출근시키는 법</div>
+          <div class="ch-sub">세종이 남긴 것은 답이 아니라 질문이었다 · 내 고민을 세종의 언어로 바꾸는 3단계 공식 · 경복궁이 당신에게 말을 거는 순간</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 저자 소개 -->
+  <section class="section">
+    <p class="eyebrow">저자 소개</p>
+    <div class="author-row">
+      <div class="author-avatar">배</div>
+      <div>
+        <div class="author-name">배하연</div>
+        <div class="author-role">실록 쾌선생 · 라이프딕(주) 대표</div>
+      </div>
+    </div>
+    <p class="body-text">
+      조선왕조실록을 8년간 직접 읽어온 인문학 강사이자 콘텐츠 크리에이터. 세종대왕 탄신 기념 국회 특강, 한글날 광화문 훈민정음 강의, 경복궁·영릉 역사 투어를 운영하며 세종의 철학을 현장에서 전달하고 있습니다. "실록은 쉽게, 깨달음은 깊게"를 모토로 기업과 기관 강단에 서고 있습니다.
+    </p>
+
+    <div class="link-grid">
+      <a class="link-card" href="https://www.youtube.com/@thekingsleadership" target="_blank" rel="noopener">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>
+        </div>
+        <div>
+          <div class="link-label">유튜브</div>
+          <div class="link-sub">@thekingsleadership</div>
+        </div>
+      </a>
+      <a class="link-card" href="https://www.instagram.com/hayeon.pot" target="_blank" rel="noopener">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </div>
+        <div>
+          <div class="link-label">인스타그램</div>
+          <div class="link-sub">@hayeon.pot</div>
+        </div>
+      </a>
+      <a class="link-card" href="https://www.threads.net/@hayeon.pot" target="_blank" rel="noopener">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.473 12.01v-.017c.027-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.594 12c.022 3.086.713 5.496 2.051 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.689-2.046 1.41-1.497 2.146-3.77 2.146-6.792v-.064l-.064-.077c-.43-.528-1.001-.88-1.586-1.04-.594-.163-1.192-.13-1.694.115-.48.237-.808.658-.956 1.24-.148.58-.083 1.26.186 1.898.234.556.591 1.031 1.047 1.398.386.31.527.847.337 1.324-.144.364-.476.63-.873.698-.2.034-.41.05-.63.046-1.207-.024-2.286-.584-3.24-1.68-.863-1.04-1.374-2.404-1.47-3.94a8.028 8.028 0 0 1 .014-1.18c.145-1.83.879-3.318 2.02-4.194 1.09-.839 2.543-1.183 4.208-.979 1.344.164 2.474.682 3.36 1.542.886.861 1.444 2.029 1.66 3.449.08.513.12 1.05.12 1.593 0 3.617-.959 6.38-2.854 8.213C17.49 23.19 15.138 24 12.186 24z"/></svg>
+        </div>
+        <div>
+          <div class="link-label">Threads</div>
+          <div class="link-sub">@hayeon.pot</div>
+        </div>
+      </a>
+      <a class="link-card" href="https://blog.naver.com/hayeonpot/" target="_blank" rel="noopener">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727z"/></svg>
+        </div>
+        <div>
+          <div class="link-label">블로그</div>
+          <div class="link-sub">네이버 블로그</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 배하연 · 라이프딕(주)<br>Simple Wisdom, Deep Insight</p>
+  </footer>
+
+</div>
+
+<script>
+  function submitEmail() {
+    const input = document.getElementById('emailInput');
+    const form = document.getElementById('alertForm');
+    const success = document.getElementById('alertSuccess');
+    const email = input.value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      input.style.borderColor = '#c0392b';
+      input.focus();
+      return;
+    }
+    // 여기에 실제 이메일 수집 API 연결 (Google Forms, Mailchimp 등)
+    form.style.display = 'none';
+    success.style.display = 'block';
+  }
+
+  document.getElementById('emailInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') submitEmail();
+  });
+</script>
+</body>
+</html>
