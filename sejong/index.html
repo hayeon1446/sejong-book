@@ -54,19 +54,20 @@ p{margin:0}
 .src{display:block;font-size:12.5px;color:var(--muted);margin-top:6px}
 .src a{color:var(--muted)}
 .mix{background:var(--red-bg);border-radius:14px;padding:14px 16px;font-size:15px;margin-top:14px}
-.dist{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
-.dist div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 4px;text-align:center;font-size:12.5px;color:var(--muted);line-height:1.4}
-.dist strong{display:block;font-size:18px;color:var(--ink)}
-.dist .on{border-color:var(--red)}
-.dist .on strong{color:var(--red)}
-.group{background:#2A2523;color:#fff;border-radius:18px;padding:24px 20px;margin:24px 0}
-.group .eyebrow{color:#E7B8B0}
-.group h3{font-size:20px;line-height:1.45;margin:8px 0 6px}
-.group .how{font-size:14px;color:#D7D0CB}
-.group ol{margin:16px 0 0;padding-left:20px}
-.group li{margin:10px 0;font-size:15.5px}
-.group .blank{border-bottom:1.5px solid #E7B8B0;padding:0 26px}
-.group .end{margin-top:14px;font-size:14px;color:#D7D0CB;border-top:1px solid #4a423e;padding-top:12px}
+.dist{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:16px}
+.dist-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.dist-title span{font-weight:400;color:var(--muted);font-size:12.5px}
+.drow{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:14px}
+.drow .dn{flex:0 0 132px;color:#333}
+.drow .dt{flex:1;height:10px;background:#EFE9E0;border-radius:9px;overflow:hidden}
+.drow .dt div{height:100%;background:#BFB3A8;border-radius:9px}
+.drow .dc{flex:0 0 34px;text-align:right;color:var(--muted)}
+.drow.on .dn,.drow.on .dc{color:var(--red);font-weight:700}
+.drow.on .dt div{background:var(--red)}
+.namefield{display:block;margin-top:20px;font-weight:700;font-size:15px}
+.namefield input{display:block;width:100%;min-height:54px;margin-top:8px;border:1.5px solid var(--line);border-radius:14px;padding:0 16px;font:inherit;font-size:17px;font-weight:400;background:#fff;color:var(--ink)}
+.namefield input:focus{outline:none;border-color:var(--red)}
+.nameerr{color:var(--red);font-size:13.5px;margin-top:6px;min-height:1em}
 #imageArea img{width:100%;border-radius:12px;border:1px solid var(--line);margin-top:16px;display:block}
 .small{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#202020;color:#fff;padding:11px 18px;border-radius:99px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
@@ -129,7 +130,7 @@ const QS=[
  ['팀 회의에서 누구도 질문하지 않습니다.',[['S','반대나 모르는 점을 말해도 괜찮다고 먼저 밝힌다.'],['L','돌아가며 부담 없이 이야기할 시간을 만든다.'],['T','각자의 전문성과 강점을 살려 발언 기회를 준다.'],['Q','답하기 쉬운 구체적인 질문으로 대화를 연다.']]]
 ];
 const N=QS.length;
-let idx=-1, sel=new Array(N).fill(null), res=null;
+let idx=-1, sel=new Array(N).fill(null), res=null, who='';
 const app=document.getElementById('app');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function toTop(){window.scrollTo({top:0,behavior:'auto'})}
@@ -149,8 +150,12 @@ function intro(){
   <h1>세종이라면,<br>나는 어떤 리더일까?</h1>
   <p class="lead">나의 소통 습관을 발견하고, 내일 바꿀 행동 하나 찾기</p>
   <div class="guide">세종의 리더십을 배운 지금, 나의 소통 습관도 살펴봅니다.<br><br>10개의 짧은 업무 상황을 읽고, <b>내가 실제로 가장 먼저 할 법한 행동</b>을 골라주세요. 정답도, 더 높은 유형도 없습니다.</div>
-  <div class="meta"><span>10문항</span><span>약 5–7분</span><span>로그인·이름 입력 없음</span></div>
-  <button class="btn" onclick="go(0)">내 리더십 살펴보기 →</button>
+  <div class="meta"><span>10문항</span><span>약 5–7분</span><span>로그인 없음</span></div>
+  <label class="namefield" for="who">이름을 입력해 주세요
+    <input id="who" maxlength="12" placeholder="예: 홍길동" autocomplete="off" value="${esc(who)}" onkeydown="if(event.key==='Enter')begin()">
+  </label>
+  <p class="nameerr" id="nameerr" role="alert"></p>
+  <button class="btn" style="margin-top:8px" onclick="begin()">내 리더십 살펴보기 →</button>
   <p class="notice">교육용 자기성찰 도구입니다. 성격이나 역량을 진단하는 검증된 심리검사는 아닙니다. 응답은 이 휴대폰 화면 안에서만 계산되며 어디에도 저장·전송되지 않습니다.</p>
   </section>`;
 }
@@ -171,6 +176,11 @@ function question(){
   </section>`;
 }
 
+function begin(){
+  const v=document.getElementById('who').value.trim().slice(0,12);
+  if(!v){document.getElementById('nameerr').textContent='이름을 입력해 주세요.';document.getElementById('who').focus();return}
+  who=v; go(0);
+}
 function pick(i){
   sel[idx]=i;
   document.querySelectorAll('.choice').forEach((b,j)=>b.setAttribute('aria-pressed',j===i));
@@ -203,9 +213,10 @@ function typeCard(t){
 function result(){
   const {scores,topTypes,mixed}=res;
   const names=topTypes.map(t=>P[t].name);
+  const W=esc(who);
   const head=mixed
-    ? `<h1>나에게는 두 가지 이상의<br><span>익숙한 방식</span>이 있습니다</h1><p class="sub">${names.join(' · ')}</p>`
-    : `<h1>나의 익숙한 리더십 방식은<br><span>${names[0]}</span></h1>`;
+    ? `<h1>${W}님에게는 두 가지 이상의<br><span>익숙한 방식</span>이 있습니다</h1><p class="sub">${names.join(' · ')}</p>`
+    : `<h1>${W}님의 익숙한 리더십 방식은<br><span>${names[0]}</span></h1>`;
   const others=mixed
     ? `<div class="mix">여러 방식을 비슷하게 쓰고 있습니다. 어느 쪽이 더 낫다는 뜻이 아니라, 상황에 따라 자연스럽게 꺼내는 방식이 둘 이상이라는 뜻입니다.</div>`
     : `<div class="mix">나머지 세 가지 방식도 상황에 따라 도움이 됩니다. 조원들의 결과에서 내가 덜 쓰는 방식을 살펴보세요.</div>`;
@@ -214,18 +225,11 @@ function result(){
   <div class="result-head">${head}</div>
   <p class="sub">이 유형이 더 우수하다는 뜻이 아니라, 지금 상황에서 내가 자주 선택하는 행동 방식입니다.</p>
   ${others}
-  <div class="dist" aria-label="선택 분포">${TYPES.map(t=>`<div class="${topTypes.includes(t)?'on':''}"><strong>${scores[t]}</strong>${P[t].name.split(' ').pop()}</div>`).join('')}</div>
-  ${topTypes.map(typeCard).join('')}
-  <div class="group">
-    <div class="eyebrow">4인 조 대화</div>
-    <h3>같은 세종을 배워도,<br>우리의 강점은 다릅니다.</h3>
-    <p class="how">4명씩, 각자 1분 이내로 이야기해 주세요. 결과 공개는 자율입니다.</p>
-    <ol>
-      <li>제 결과에서 가장 공감되는 강점은 <span class="blank"></span> 입니다.</li>
-      <li>다른 조원의 방식이 내 방식보다 더 효과적일 상황은 <span class="blank"></span> 입니다.</li>
-    </ol>
-    <p class="end">마무리 — <b>내일부터 팀에서 바꿀 말 한마디</b>를 한 명씩 말해 주세요.</p>
+  <div class="dist" aria-label="10문항 중 각 방식을 고른 횟수">
+    <p class="dist-title">10문항 중 각 방식을 고른 횟수 <span>· 순위가 아니에요</span></p>
+    ${TYPES.map(t=>`<div class="drow${topTypes.includes(t)?' on':''}"><span class="dn">${P[t].name}</span><span class="dt"><div style="width:${scores[t]/N*100}%"></div></span><span class="dc">${scores[t]}번</span></div>`).join('')}
   </div>
+  ${topTypes.map(typeCard).join('')}
   <button class="btn" onclick="makeImage()">결과 이미지 저장</button>
   <button class="btn line" onclick="copyText()">텍스트 복사</button>
   <button class="btn line" onclick="restart()">다시 해보기</button>
@@ -239,8 +243,8 @@ function restart(){ sel=new Array(N).fill(null); res=null; go(-1); }
 function resultText(){
   const {scores,topTypes,mixed}=res;
   let s='[세종이라면, 나는 어떤 리더일까?]\n';
-  s+=mixed?`나에게는 두 가지 이상의 익숙한 방식이 있습니다: ${topTypes.map(t=>P[t].name).join(' · ')}\n`:`나의 익숙한 리더십 방식은 ${P[topTypes[0]].name}\n`;
-  s+=`선택 분포: ${TYPES.map(t=>P[t].name+' '+scores[t]).join(' / ')}\n`;
+  s+=mixed?`${who}님에게는 두 가지 이상의 익숙한 방식이 있습니다: ${topTypes.map(t=>P[t].name).join(' · ')}\n`:`${who}님의 익숙한 리더십 방식은 ${P[topTypes[0]].name}\n`;
+  s+=`10문항 중 고른 횟수(순위 아님): ${TYPES.map(t=>P[t].name+' '+scores[t]+'번').join(' / ')}\n`;
   topTypes.forEach(t=>{const p=P[t];s+=`\n■ ${p.name} — ${p.headline}\n· 잘하는 방식: ${p.strength}\n· 도움이 되는 상황: ${p.when}\n· 다른 방식도 필요할 때: ${p.caution}\n· 세종에게서 배우기: ${p.sejong} (${p.src})\n· 내일부터 바꿀 말 한마디: ${p.say}\n· 조원과 이야기해보기: ${p.ask}\n`});
   s+='\n교육용 자기성찰 활동이며 검증된 심리검사가 아닙니다.\nhttps://sejong-book.vercel.app/sejong';
   return s;
@@ -267,12 +271,16 @@ async function makeImage(){
     const T=(txt,font,color,lh,max=TW)=>{const ls=lines(txt,font,max);if(draw){x.fillStyle=color;x.font=font;ls.forEach((l,i)=>x.fillText(l,M,y+i*lh))}y+=ls.length*lh;};
     if(draw){x.fillStyle='#FAF8F3';x.fillRect(0,0,W,c.height);x.fillStyle='#8F2525';x.fillRect(0,0,W,16);x.textBaseline='top'}
     T('세종이라면, 나는 어떤 리더일까?',`700 32px ${F}`,'#8F2525',44);y+=26;
-    if(mixed){T('나에게는 두 가지 이상의 익숙한 방식이 있습니다',`700 40px ${F}`,'#202020',56);y+=8;T(topTypes.map(t=>P[t].name).join(' · '),`800 54px ${F}`,'#8F2525',72)}
-    else{T('나의 익숙한 리더십 방식은',`700 40px ${F}`,'#202020',56);y+=8;T(P[topTypes[0]].name,`800 76px ${F}`,'#8F2525',96)}
+    if(mixed){T(who+'님에게는 두 가지 이상의 익숙한 방식이 있습니다',`700 40px ${F}`,'#202020',56);y+=8;T(topTypes.map(t=>P[t].name).join(' · '),`800 54px ${F}`,'#8F2525',72)}
+    else{T(who+'님의 익숙한 리더십 방식은',`700 40px ${F}`,'#202020',56);y+=8;T(P[topTypes[0]].name,`800 76px ${F}`,'#8F2525',96)}
+    y+=30;
+    T('10문항 중 각 방식을 고른 횟수 (순위가 아니에요)',`600 26px ${F}`,'#666666',38);y+=12;
+    TYPES.forEach(t=>{const on=topTypes.includes(t);
+      if(draw){x.fillStyle=on?'#8F2525':'#333333';x.font=`${on?700:500} 28px ${F}`;x.fillText(P[t].name,M,y);
+        const bx=M+340,bwid=TW-340-90;x.fillStyle='#EFE9E0';x.fillRect(bx,y+9,bwid,18);x.fillStyle=on?'#8F2525':'#BFB3A8';x.fillRect(bx,y+9,bwid*scores[t]/N,18);
+        x.textAlign='right';x.fillStyle=on?'#8F2525':'#666666';x.fillText(scores[t]+'번',M+TW,y);x.textAlign='left'}
+      y+=50;});
     y+=24;
-    const bw=(TW-36)/4;
-    if(draw){TYPES.forEach((t,i)=>{const bx=M+i*(bw+12);x.fillStyle='#fff';x.strokeStyle=topTypes.includes(t)?'#8F2525':'#E6E0D6';x.lineWidth=3;x.beginPath();x.roundRect?x.roundRect(bx,y,bw,120,18):x.rect(bx,y,bw,120);x.fill();x.stroke();x.textAlign='center';x.fillStyle=topTypes.includes(t)?'#8F2525':'#202020';x.font=`800 44px ${F}`;x.fillText(String(scores[t]),bx+bw/2,y+18);x.fillStyle='#666';x.font=`500 26px ${F}`;x.fillText(P[t].name.split(' ').pop(),bx+bw/2,y+76);x.textAlign='left'})}
-    y+=160;
     topTypes.forEach(t=>{const p=P[t];
       if(draw){x.fillStyle='#E6E0D6';x.fillRect(M,y,TW,2)}y+=34;
       T(p.headline,`800 44px ${F}`,'#202020',60);y+=14;
@@ -288,7 +296,7 @@ async function makeImage(){
   let url;try{url=c.toDataURL('image/png')}catch(e){url=null}
   const area=document.getElementById('imageArea');
   if(!url){area.innerHTML='<p class="small">이 브라우저에서는 이미지 저장이 어려워요. 화면을 캡처하거나 텍스트 복사를 이용해 주세요.</p>';return}
-  const fname='세종리더십_'+topTypes.map(t=>P[t].name.replace(/\s/g,'')).join('_')+'.png';
+  const fname=who.replace(/[\\/:*?"<>|]/g,'')+'_세종리더십_'+topTypes.map(t=>P[t].name.replace(/\s/g,'')).join('_')+'.png';
   area.innerHTML=`<img alt="저장할 결과 이미지" src="${url}"><a class="btn" style="text-align:center;text-decoration:none" download="${esc(fname)}" href="${url}">PNG로 저장하기 ↓</a><p class="small">휴대폰에서는 이미지를 길게 눌러 저장할 수도 있어요.<br>저장이 안 되면 화면을 캡처해 주세요.</p>`;
   area.scrollIntoView({behavior:'smooth',block:'start'});
 }
