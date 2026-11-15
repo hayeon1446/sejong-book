@@ -79,7 +79,9 @@ p{margin:0}
 canvas{display:none}
 .cm{margin-top:34px;border-top:1px solid var(--line);padding-top:24px}
 .cm h3{font-size:19px;margin:0 0 4px}
-.cm .hint{font-size:13.5px;color:var(--muted);margin-bottom:12px}
+.cm .hint{font-size:15px;color:#333;margin:6px 0 12px;line-height:1.7}
+.cm .hint ul{margin:6px 0;padding-left:20px}
+.cm .hint li{margin:2px 0}
 .cm textarea{display:block;width:100%;min-height:92px;border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;font:inherit;font-size:16px;resize:vertical;background:#fff;color:var(--ink)}
 .cm textarea:focus{outline:none;border-color:var(--red)}
 .cm .row{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--muted);margin-top:6px}
@@ -167,7 +169,7 @@ function intro(){
   <h1>세종이라면,<br>나는 어떤 리더일까?</h1>
   <p class="lead">나의 소통 습관을 발견하고, 내일 바꿀 행동 하나 찾기</p>
   <div class="guide">세종의 리더십을 배운 지금, 나의 소통 습관도 살펴봅니다.<br><br>10개의 짧은 업무 상황을 읽고, <b>내가 실제로 가장 먼저 할 법한 행동</b>을 골라주세요. 정답도, 더 높은 유형도 없습니다.</div>
-  <div class="meta"><span>10문항</span><span>약 5–7분</span><span>로그인 없음</span></div>
+  <div class="meta"><span>10문항</span><span>약 5–7분</span></div>
   <label class="namefield" for="who">이름을 입력해 주세요
     <input id="who" maxlength="12" placeholder="예: 홍길동" autocomplete="off" value="${esc(who)}" onkeydown="if(event.key==='Enter')begin()">
   </label>
@@ -253,7 +255,7 @@ function result(){
   <div id="imageArea"></div>
   <section class="cm" id="cm">
     <h3>후기 남기기</h3>
-    <p class="hint">오늘 강의와 테스트를 하며 느낀 점을 한 줄 남겨 주세요. ${W}님 이름으로 모두에게 보입니다.</p>
+    <div class="hint">오늘 강의와 테스트를 하며,<ul><li>어떤 걸 새롭게 배웠는지</li><li>어떤 게 가장 인상깊은지</li><li>무엇을 실천해보고 싶은지</li></ul>편하게 적어주세요.</div>
     <textarea id="cmText" maxlength="300" placeholder="예: 저는 경청형이라 생각했는데 질문형이 나와서 놀랐어요."></textarea>
     <div class="row"><span>${W}님 · ${names.join(' · ')}</span><span id="cmCount">0 / 300</span></div>
     <button class="btn" id="cmBtn" onclick="postComment()">후기 등록</button>
