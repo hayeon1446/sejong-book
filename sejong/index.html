@@ -20,7 +20,9 @@ main{max-width:560px;margin:0 auto;min-height:100dvh;padding:28px 18px 56px}
 button{font:inherit;cursor:pointer;color:inherit}
 .eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--red)}
 h1{font-size:clamp(26px,7vw,34px);line-height:1.3;letter-spacing:-.03em;margin:14px 0 10px}
-h2{font-size:clamp(20px,5.4vw,23px);line-height:1.45;letter-spacing:-.02em;margin:6px 0 18px}
+h2{font-size:clamp(20px,5.4vw,23px);line-height:1.45;letter-spacing:-.02em;margin:6px 0 8px}
+.ask-line{font-size:15.5px;color:#333;margin:0 0 16px}
+.ask-line b{color:var(--red);font-weight:800}
 p{margin:0}
 .lead{font-size:17px;color:var(--ink);font-weight:600;margin-bottom:18px}
 .guide{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;font-size:15.5px;color:#333}
@@ -166,6 +168,7 @@ function question(){
   <div class="top"><span>상황 ${idx+1}</span><strong>${idx+1} / ${N}</strong></div>
   <div class="bar"><div style="width:${(idx+1)/N*100}%"></div></div>
   <h2>${esc(q)}</h2>
+  <p class="ask-line">내가 실제로 <b>가장 먼저 할 법한 행동</b>을 골라주세요.</p>
   <div role="group" aria-label="선택지">
   ${opts.map((o,i)=>`<button class="choice" aria-pressed="${cur===i}" onclick="pick(${i})"><span class="k">${'ABCD'[i]}</span>${esc(o[1])}</button>`).join('')}
   </div>
@@ -206,7 +209,6 @@ function typeCard(t){
    <div class="item"><b>이럴 때는 다른 방식도 필요합니다</b><p>${p.caution}</p></div>
    <div class="item"><b>세종에게서 배우기</b><p>${p.sejong}</p><span class="src">출처: ${p.link?`<a href="${p.link}" target="_blank" rel="noopener noreferrer">${p.src}</a>`:p.src}</span></div>
    <div class="item"><b>내일부터 바꿀 말 한마디</b><p class="say">${p.say}</p></div>
-   <div class="item"><b>조원과 이야기해보기</b><p>${p.ask}</p></div>
   </div>`;
 }
 
@@ -245,7 +247,7 @@ function resultText(){
   let s='[세종이라면, 나는 어떤 리더일까?]\n';
   s+=mixed?`${who}님에게는 두 가지 이상의 익숙한 방식이 있습니다: ${topTypes.map(t=>P[t].name).join(' · ')}\n`:`${who}님의 익숙한 리더십 방식은 ${P[topTypes[0]].name}\n`;
   s+=`10문항 중 고른 횟수(순위 아님): ${TYPES.map(t=>P[t].name+' '+scores[t]+'번').join(' / ')}\n`;
-  topTypes.forEach(t=>{const p=P[t];s+=`\n■ ${p.name} — ${p.headline}\n· 잘하는 방식: ${p.strength}\n· 도움이 되는 상황: ${p.when}\n· 다른 방식도 필요할 때: ${p.caution}\n· 세종에게서 배우기: ${p.sejong} (${p.src})\n· 내일부터 바꿀 말 한마디: ${p.say}\n· 조원과 이야기해보기: ${p.ask}\n`});
+  topTypes.forEach(t=>{const p=P[t];s+=`\n■ ${p.name} — ${p.headline}\n· 잘하는 방식: ${p.strength}\n· 도움이 되는 상황: ${p.when}\n· 다른 방식도 필요할 때: ${p.caution}\n· 세종에게서 배우기: ${p.sejong} (${p.src})\n· 내일부터 바꿀 말 한마디: ${p.say}\n`});
   s+='\n교육용 자기성찰 활동이며 검증된 심리검사가 아닙니다.\nhttps://sejong-book.vercel.app/sejong';
   return s;
 }
