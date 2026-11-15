@@ -1,19 +1,299 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>나의 세종 리더십 유형 찾기</title><style>@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap');:root{--red:#a73338;--ink:#242321;--muted:#77736e;--bg:#f7f5f1}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',sans-serif}main{max-width:520px;margin:auto;min-height:100dvh;background:#fff;padding:28px 22px 50px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--red)}h1{font-size:34px;letter-spacing:-1.7px;line-height:1.34;margin:16px 0}h2{font-size:24px;letter-spacing:-1px;line-height:1.45}p{line-height:1.85;color:#615e59}.hero{padding-top:48px}.nameinput{width:100%;padding:17px;border:1px solid #d9d0c7;border-radius:12px;font:inherit;font-size:17px;margin-top:12px}.result-art{width:100%;border-radius:14px;display:block;margin:18px 0;object-fit:cover;aspect-ratio:960/330}.seal{font-size:72px;margin:22px 0}button{font:inherit;cursor:pointer}button.primary{width:100%;border:0;border-radius:13px;background:var(--red);color:white;padding:17px;font-weight:800;font-size:16px;margin-top:20px}.secondary{width:100%;border:1px solid #ddd7d1;background:white;border-radius:12px;padding:14px;font-weight:700;margin-top:10px}.small{font-size:12px;color:#928b85}.progress{height:6px;background:#ece7e1;border-radius:9px;overflow:hidden;margin:18px 0 36px}.progress>div{height:100%;background:var(--red);transition:width .2s}.choice{width:100%;display:block;text-align:left;border:1px solid #e7e1da;background:#fff;border-radius:13px;padding:17px;margin:12px 0;line-height:1.65;font-size:15px}.choice:hover,.choice:focus{border-color:var(--red);background:#fff9f8}.number{color:var(--red);font-weight:800;font-size:13px}.result-card{background:#fcfaf6;border:1px solid #eae0d7;border-radius:18px;padding:25px 20px;margin:24px 0}.barrow{display:flex;align-items:center;gap:10px;margin:13px 0}.barrow span{width:54px;font-size:13px}.track{height:10px;flex:1;background:#e9e2d9;border-radius:10px;overflow:hidden}.fill{height:100%;background:var(--red);border-radius:10px}.barrow strong{width:38px;text-align:right;font-size:13px}.insight{border-top:1px solid #e7dfd7;padding-top:16px;margin-top:18px}.insight b{color:var(--red)}.foot{text-align:center;font-size:11px;color:#999;margin-top:30px}.hidden{display:none}#saveCanvas{display:none}#preview{width:100%;border-radius:12px;margin-top:16px;border:1px solid #eee}a.download{display:block;text-align:center;text-decoration:none;background:var(--red);color:#fff;padding:16px;border-radius:12px;font-weight:800;margin-top:14px}</style></head><body><main id="app"></main><canvas id="saveCanvas" width="1080" height="1280"></canvas><script>
-const types={A:{name:'경청형',subtitle:'사람의 목소리에서 답을 찾는 리더',strength:'다양한 의견을 듣고 구성원의 신뢰와 참여를 이끌어냅니다.',caution:'의견을 모두 수용하려다 결정이 늦어질 수 있습니다.',lesson:'세종의 경청은 단순한 동의가 아니었습니다. 서로 다른 주장을 검토한 뒤 판단하는 과정이었습니다.',question:'나는 지금 누구의 목소리를 충분히 듣지 못하고 있는가?',action:'다음 회의에서 평소 말이 적은 동료에게 먼저 의견을 물어보세요.'},B:{name:'성장형',subtitle:'사람의 가능성을 발견하는 리더',strength:'구성원의 강점을 발견하고 역량을 발휘할 기회를 만듭니다.',caution:'성장을 기다리는 동안 당장의 성과와 책임을 놓칠 수 있습니다.',lesson:'세종은 인재를 알아보고 배움과 연구의 기회를 마련했습니다. 사람을 키우는 일은 장기적인 조직 역량을 만드는 일입니다.',question:'내가 아직 발견하지 못한 동료의 강점은 무엇인가?',action:'이번 주 동료 한 명에게 구체적인 강점과 새로운 도전 기회를 이야기해 보세요.'},C:{name:'판단형',subtitle:'근거와 기준으로 방향을 정하는 리더',strength:'복잡한 상황에서도 목표와 근거를 확인하며 책임 있게 결정합니다.',caution:'논리와 원칙에 집중하다 구성원의 감정이나 현장 맥락을 놓칠 수 있습니다.',lesson:'세종은 논의를 거듭하면서도 중요한 국정의 최종 판단을 책임졌습니다. 좋은 결정에는 근거뿐 아니라 실행의 책임도 따릅니다.',question:'내 결정의 기준은 구성원에게 충분히 설명되어 있는가?',action:'이번 주 중요한 결정 하나에 대해 판단 기준을 한 문장으로 공유해 보세요.'},D:{name:'혁신형',subtitle:'익숙한 한계를 넘어 길을 만드는 리더',strength:'문제의 본질을 다시 묻고 새로운 해결 방식을 시도합니다.',caution:'변화의 속도가 빨라 구성원의 이해와 준비를 앞지를 수 있습니다.',lesson:'훈민정음 창제와 과학기술 진흥은 기존 방식의 한계를 살피고 새로운 도구를 만든 사례입니다. 혁신은 사람의 실제 문제에서 출발해야 합니다.',question:'우리가 당연하게 여기는 방식 중 다시 물어야 할 것은 무엇인가?',action:'반복되는 업무 하나를 골라 더 단순하게 바꿀 수 있는 실험을 제안해 보세요.'}};
-const questions=[
-['회의에서 팀원들의 의견이 충돌했습니다. 어떻게 하겠습니까?',['각자의 말을 충분히 듣고 쟁점을 정리한다.','각자의 강점을 살려 역할을 새롭게 나눈다.','목표와 근거를 비교해 결정한다.','기존 선택지 밖의 해결책을 찾아본다.']],
-['새로운 직원이 업무에 적응하지 못하고 있습니다.',['어려운 점이 무엇인지 먼저 이야기를 듣는다.','작은 성공 경험을 만들도록 단계별로 돕는다.','필요한 업무 기준과 우선순위를 명확히 한다.','업무를 배우는 방식을 새롭게 설계한다.']],
-['중요한 사업의 성과가 기대에 못 미쳤습니다.',['현장 담당자들의 의견부터 모은다.','팀원들의 역량을 점검하고 지원책을 마련한다.','성과 자료를 분석해 원인을 판단한다.','사업 방식 자체를 바꿀 가능성을 검토한다.']],
-['급하게 결정을 내려야 하는 상황입니다.',['관련된 사람들의 핵심 우려를 짧게 확인한다.','실행할 사람의 역량과 준비 상태를 확인한다.','핵심 근거와 위험을 확인하고 결정한다.','작게 시험할 수 있는 대안을 신속히 만든다.']],
-['팀원이 실수를 보고했습니다.',['무슨 일이 있었는지 차분하게 듣는다.','다음에는 잘할 수 있도록 피드백한다.','원인과 책임, 재발 방지 기준을 정한다.','실수가 반복되지 않을 새 시스템을 고민한다.']],
-['새로운 정책을 추진하라는 요청을 받았습니다.',['영향을 받을 사람들의 의견을 수렴한다.','담당자의 역량과 협업 체계를 먼저 준비한다.','정책의 목적과 실행 기준을 분명히 한다.','기존 절차를 개선할 방법을 실험한다.']],
-['팀원들에게 업무를 배분해야 합니다.',['희망과 부담을 먼저 물어본다.','각자의 잠재력과 성장 기회를 고려한다.','역할과 책임, 마감 기준을 명확히 한다.','기존 분장 방식과 다른 조합을 시도한다.']],
-['조직에 오래된 비효율적인 관행이 있습니다.',['왜 유지됐는지 관계자들의 이야기를 듣는다.','변화를 이끌 내부 인재를 키운다.','관행의 비용과 개선 효과를 비교한다.','작은 실험으로 새로운 방식을 검증한다.']],
-['상사가 현장과 맞지 않는 지시를 내렸습니다.',['상사의 의도와 현장의 우려를 함께 듣는다.','현장 구성원과 함께 대응 역량을 모은다.','사실과 근거를 정리해 수정안을 제시한다.','목표는 유지하되 다른 실행 방법을 제안한다.']],
-['팀의 분위기가 침체되어 있습니다.',['구성원들의 속마음을 들을 자리를 만든다.','서로의 장점을 인정하고 성장 기회를 준다.','문제와 목표를 명확히 해 혼란을 줄인다.','새로운 협업 활동을 시도해 활력을 만든다.']],
-['좋은 아이디어가 나왔지만 반대가 많습니다.',['반대 이유를 듣고 우려를 정리한다.','아이디어를 실현할 사람을 모아 지원한다.','실행 근거와 위험을 검증한다.','작은 시범사업으로 가능성을 보여준다.']],
-['당신이 생각하는 좋은 리더의 첫 번째 역할은?',['사람들의 목소리를 놓치지 않는 것.','사람이 성장할 기회를 만드는 것.','명확한 기준으로 책임 있게 결정하는 것.','더 나은 미래를 위한 변화를 만드는 것.']]
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>세종이라면, 나는 어떤 리더일까?</title>
+<meta name="description" content="나의 소통 습관을 발견하고, 내일 바꿀 행동 하나 찾기. 10개의 업무 상황으로 살펴보는 교육용 자기성찰 활동입니다.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="세종이라면, 나는 어떤 리더일까?">
+<meta property="og:description" content="나의 소통 습관을 발견하고, 내일 바꿀 행동 하나 찾기 · 10문항 · 약 5–7분">
+<meta property="og:url" content="https://sejong-book.vercel.app/sejong">
+<meta property="og:image" content="https://sejong-book.vercel.app/cover.jpg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{--bg:#FAF8F3;--card:#fff;--red:#8F2525;--red-bg:#F6ECEA;--ink:#202020;--muted:#666;--line:#E6E0D6;--font:'Pretendard Variable',Pretendard,-apple-system,'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
+main{max-width:560px;margin:0 auto;min-height:100dvh;padding:28px 18px 56px}
+button{font:inherit;cursor:pointer;color:inherit}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--red)}
+h1{font-size:clamp(26px,7vw,34px);line-height:1.3;letter-spacing:-.03em;margin:14px 0 10px}
+h2{font-size:clamp(20px,5.4vw,23px);line-height:1.45;letter-spacing:-.02em;margin:6px 0 18px}
+p{margin:0}
+.lead{font-size:17px;color:var(--ink);font-weight:600;margin-bottom:18px}
+.guide{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;font-size:15.5px;color:#333}
+.guide b{color:var(--red)}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
+.meta span{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:99px;padding:4px 11px}
+.btn{display:block;width:100%;min-height:56px;border:0;border-radius:14px;background:var(--red);color:#fff;font-size:17px;font-weight:700;padding:14px;margin-top:22px}
+.btn:disabled{background:#cfc6c3;cursor:default}
+.btn.line{background:#fff;color:var(--ink);border:1px solid var(--line);font-weight:600;margin-top:10px}
+.notice{font-size:12.5px;color:var(--muted);margin-top:16px;line-height:1.7}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--muted)}
+.top strong{color:var(--red);font-size:15px}
+.bar{height:6px;background:#EAE3D8;border-radius:9px;overflow:hidden;margin:10px 0 26px}
+.bar>div{height:100%;background:var(--red);transition:width .25s}
+.choice{display:block;width:100%;min-height:56px;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:15px 16px;margin:10px 0;font-size:16px;line-height:1.55}
+.choice[aria-pressed="true"]{border-color:var(--red);background:var(--red-bg);font-weight:600}
+.choice .k{display:inline-block;width:22px;color:var(--muted);font-weight:700}
+.nav{display:flex;gap:10px;margin-top:18px}
+.nav .btn{margin-top:0}
+.nav .prev{flex:0 0 32%}
+.result-head{margin:10px 0 6px}
+.result-head h1 span{color:var(--red)}
+.sub{font-size:14.5px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 18px;margin:20px 0}
+.card .tname{font-size:13px;font-weight:700;color:var(--red);letter-spacing:.04em}
+.card .headline{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:4px 0 6px;line-height:1.4}
+.item{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+.item b{display:block;font-size:13.5px;color:var(--red);margin-bottom:4px}
+.item p{font-size:15.5px;color:#333}
+.say{font-size:17px!important;font-weight:700;color:var(--ink)!important}
+.src{display:block;font-size:12.5px;color:var(--muted);margin-top:6px}
+.src a{color:var(--muted)}
+.mix{background:var(--red-bg);border-radius:14px;padding:14px 16px;font-size:15px;margin-top:14px}
+.dist{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.dist div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 4px;text-align:center;font-size:12.5px;color:var(--muted);line-height:1.4}
+.dist strong{display:block;font-size:18px;color:var(--ink)}
+.dist .on{border-color:var(--red)}
+.dist .on strong{color:var(--red)}
+.group{background:#2A2523;color:#fff;border-radius:18px;padding:24px 20px;margin:24px 0}
+.group .eyebrow{color:#E7B8B0}
+.group h3{font-size:20px;line-height:1.45;margin:8px 0 6px}
+.group .how{font-size:14px;color:#D7D0CB}
+.group ol{margin:16px 0 0;padding-left:20px}
+.group li{margin:10px 0;font-size:15.5px}
+.group .blank{border-bottom:1.5px solid #E7B8B0;padding:0 26px}
+.group .end{margin-top:14px;font-size:14px;color:#D7D0CB;border-top:1px solid #4a423e;padding-top:12px}
+#imageArea img{width:100%;border-radius:12px;border:1px solid var(--line);margin-top:16px;display:block}
+.small{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#202020;color:#fff;padding:11px 18px;border-radius:99px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+.foot{text-align:center;font-size:12px;color:#999;margin-top:28px;line-height:1.8}
+.foot a{color:var(--red);font-weight:600}
+canvas{display:none}
+</style>
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<div class="toast" id="toast" role="status"></div>
+<canvas id="cv" width="1080" height="1350"></canvas>
+<script>
+const TYPES=['Q','L','S','T'];
+const P={
+ Q:{name:'질문하는 탐구형',headline:'질문으로 길을 여는 리더',
+  strength:'결론을 서두르기보다 먼저 사실과 다른 의견을 확인합니다. 복잡한 문제의 원인을 발견하는 데 도움이 됩니다.',
+  when:'신규 정책의 타당성과 위험을 검토할 때',
+  caution:'확인을 많이 하다가 책임 있는 결정을 늦출 수 있습니다. 질문만 이어가다 결정을 미루지 않도록 해 보세요.',
+  sejong:'세종은 즉위 직후 인사 문제를 혼자 정하지 않고 함께 의논하겠다고 말했고, 이후 여러 기록에서 신하들에게 의견을 물었습니다.',
+  src:'《세종실록》 세종 즉위년 8월 12일',link:'',
+  say:'“결론을 내리기 전에, 우리가 놓친 사실은 무엇인가요?”',
+  ask:'“제가 질문을 잘하는 때와, 질문만 늘어지는 때는 언제일까요?”'},
+ L:{name:'듣고 조율하는 경청형',headline:'사람의 말을 끝까지 듣는 리더',
+  strength:'상대의 의도와 걱정을 살피며 의견 차이를 조율합니다. 의견을 꺼내기 편한 관계를 만드는 데 도움이 됩니다.',
+  when:'부서 간 협력, 또는 민원·갈등 상황에서',
+  caution:'모두의 기분을 배려하느라 결정 기준을 모호하게 만들 수 있습니다. 갈등이 두려워 쟁점을 흐리지 않도록 해 보세요.',
+  sejong:'세종이 집현전 학자들과 경연에서 묻고 토론한 장면들은, 듣기와 의논이 왜 리더의 일인지 돌아보게 합니다.',
+  src:'강의 중 집현전·경연 부분과 연결한 현대적 해석입니다',link:'',
+  say:'“제가 이해한 게 맞는지 먼저 확인해도 될까요?”',
+  ask:'“잘 듣는 것과 무조건 동의하는 것은 어떻게 다를까요?”'},
+ S:{name:'반대를 열어두는 직언환영형',headline:'불편한 말도 듣는 리더',
+  strength:'반대 의견과 문제 제기를 배제하지 않습니다. 구성원이 숨기기 쉬운 위험을 드러낼 기회를 만듭니다.',
+  when:'보고 누락, 정책 위험, 실수나 문제를 발견했을 때',
+  caution:'의견을 자유롭게 말할 수 있게 하되, 반대를 듣는 데서 끝내지 말고 판단과 후속 조치, 책임과 실행 기준도 함께 세워야 합니다.',
+  sejong:'하위지가 과거시험 답안에서 흥천사 공사를 비판하자, 세종은 과거시험이 바로 직언을 구하는 자리라고 평가했습니다. 다만 공사가 잘못됐다는 의견에 동의한 것은 아닙니다.',
+  src:'《세종실록》 세종 20년 4월 12일',link:'https://sillok.history.go.kr/id/kda_12004012_002',
+  say:'“제 생각과 다른 의견이 있다면 먼저 듣겠습니다.”',
+  ask:'“우리 팀은 반대 의견을 낸 뒤에도 다음에 다시 말할 수 있을까요?”'},
+ T:{name:'강점을 살리는 인재발견형',headline:'사람의 쓰임을 발견하는 리더',
+  strength:'구성원에게 필요한 역할과 그 사람이 발휘할 수 있는 강점을 연결하려 합니다. 성과를 구체적으로 인정하는 데 도움이 됩니다.',
+  when:'업무 분장, 협업 팀 구성, 성장 피드백을 할 때',
+  caution:'첫인상으로 사람을 유형화하지 말고, 실제 능력과 직무 요구, 공정한 기회를 함께 봐야 합니다.',
+  sejong:'세종 5년 사헌부는 사람을 쓰는 일을 목수가 나무를 쓰는 일에 비유했습니다. 이는 세종 자신의 직접 발언이 아니라 사헌부의 상소입니다.',
+  src:'《세종실록》 세종 5년 5월 17일',link:'https://sillok.history.go.kr/id/kda_10505017_003',
+  say:'“이 일을 할 때 어떤 강점을 가장 잘 발휘할 수 있으세요?”',
+  ask:'“우리가 아직 충분히 발견하지 못한 동료의 강점은 무엇일까요?”'}
+};
+const QS=[
+ ['회의에서 부서 사업 방향을 결정해야 합니다.',[['Q','먼저 확인해야 할 사실과 쟁점을 질문한다.'],['L','참석자들의 걱정과 기대를 충분히 듣는다.'],['S','반대 의견이나 놓친 위험이 있는지 요청한다.'],['T','누가 어떤 역할을 맡을 때 잘할지 살핀다.']]],
+ ['직원이 ‘이 방식은 문제가 있을 것 같습니다’라고 말합니다.',[['S','어떤 문제가 걱정되는지, 편하게 말해달라고 한다.'],['T','해당 문제를 잘 검토할 사람과 함께 살펴보자고 한다.'],['Q','판단의 근거와 추가 확인 사항을 묻는다.'],['L','그 말을 꺼내기까지의 고민을 먼저 들어본다.']]],
+ ['새로 온 직원이 업무를 어려워합니다.',[['L','어떤 점이 부담스러운지 이야기를 듣는다.'],['Q','무엇을 알고 무엇이 헷갈리는지 질문한다.'],['T','잘하는 일과 익숙하지 않은 일을 파악해 역할을 조정한다.'],['S','모르겠다고 말해도 괜찮다고 먼저 알려준다.']]],
+ ['내가 추진한 업무에서 예상하지 못한 오류가 발견됩니다.',[['T','관련자의 역할과 지원 자원을 재배치한다.'],['S','오류를 조기에 알려준 행동을 인정한다.'],['L','관련자들의 상황과 어려움을 차분히 듣는다.'],['Q','오류가 생긴 과정과 재발 방지 원인을 확인한다.']]],
+ ['부서 간 협의가 교착 상태입니다.',[['Q','서로 다른 판단의 기준부터 확인한다.'],['S','말하지 못한 반대 이유가 있는지 묻는다.'],['T','서로 잘할 수 있는 일을 나누어 맡긴다.'],['L','각 부서의 입장을 요약해 공통점을 찾는다.']]],
+ ['직원이 좋은 성과를 냈습니다.',[['T','그 직원이 발휘한 구체적인 강점과 행동을 인정한다.'],['L','과정에서 어떤 점이 힘들었는지 이야기를 듣는다.'],['Q','무엇이 성공에 가장 크게 기여했는지 질문한다.'],['S','과정 중 제기했던 문제와 개선 의견도 함께 칭찬한다.']]],
+ ['상급자의 지시가 현장 상황과 맞지 않는 것 같습니다.',[['S','우려와 근거를 정리해 필요한 이견을 전달한다.'],['Q','지시의 목표와 전제가 무엇인지 먼저 확인한다.'],['L','상급자와 실무자 각각의 입장을 이해하려 한다.'],['T','주어진 여건에서 적합한 담당자와 대응 역할을 검토한다.']]],
+ ['팀원이 같은 실수를 반복합니다.',[['L','실수를 반복하는 데 어떤 어려움이 있는지 듣는다.'],['T','현재 역할과 역량·지원 방식이 맞는지 살핀다.'],['S','실수를 숨기지 않고 공유할 수 있는 방법을 만든다.'],['Q','실수의 원인과 업무 절차의 빈틈을 함께 확인한다.']]],
+ ['기한이 촉박한 중요한 과제를 맡았습니다.',[['T','각자의 강점과 가용 시간을 고려해 역할을 나눈다.'],['Q','꼭 지켜야 할 우선순위와 성공 기준을 확인한다.'],['L','구성원이 감당할 수 있는 업무량과 우려를 듣는다.'],['S','일정상 위험 요소를 숨기지 말고 즉시 알리게 한다.']]],
+ ['팀 회의에서 누구도 질문하지 않습니다.',[['S','반대나 모르는 점을 말해도 괜찮다고 먼저 밝힌다.'],['L','돌아가며 부담 없이 이야기할 시간을 만든다.'],['T','각자의 전문성과 강점을 살려 발언 기회를 준다.'],['Q','답하기 쉬운 구체적인 질문으로 대화를 연다.']]]
 ];
-let participantName='',index=-1,answers=[];const app=document.getElementById('app');function start(){const input=document.getElementById('participantName');if(input){participantName=input.value.trim().slice(0,20);if(!participantName){input.focus();alert('이름을 입력해 주세요.');return}}index=0;answers=[];render()}function render(){if(index<0){app.innerHTML=`<section class="hero"><div class="eyebrow">SEJONG LEADERSHIP TEST</div><div class="seal">♛</div><h1>나는 어떤<br><span style="color:var(--red)">세종 리더십</span> 유형일까?</h1><p>조직에서 마주하는 12가지 상황.<br>당신이 가장 자연스럽게 선택하는 행동을 골라보세요.</p><label for="participantName" style="font-weight:700">이름을 입력해 주세요</label><input id="participantName" class="nameinput" maxlength="20" placeholder="예: 홍길동" autocomplete="name"><button class="primary" onclick="start()">나의 유형 알아보기 →</button><p class="small">약 3~5분 · 12문항 · 회원가입 없음<br>교육용 자기성찰 도구이며 표준화된 심리검사가 아닙니다.</p></section>`;return}if(index>=questions.length){result();return}const q=questions[index];app.innerHTML=`<div class="eyebrow">SEJONG LEADERSHIP TEST</div><div class="progress"><div style="width:${index/12*100}%"></div></div><div class="number">QUESTION ${String(index+1).padStart(2,'0')} / 12</div><h2>${q[0]}</h2><p>평소 나의 행동과 가장 가까운 답을 선택해 주세요.</p>${q[1].map((s,i)=>`<button class="choice" onclick="choose(${i})">${s}</button>`).join('')}${index?'<button class="secondary" onclick="back()">← 이전 문항</button>':''}`};function choose(i){answers[index]=i;index++;render()}function back(){index--;render()};let resultData;
-function escapeHTML(x){return x.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function result(){let counts=[0,0,0,0];answers.forEach(a=>counts[a]++);let max=Math.max(...counts);let winner=counts.indexOf(max);let keys=['A','B','C','D'];let t=types[keys[winner]];resultData={counts,winner,t};let bars=counts.map((n,i)=>`<div class="barrow"><span>${types[keys[i]].name}</span><div class="track"><div class="fill" style="width:${n/12*100}%"></div></div><strong>${n}/12</strong></div>`).join('');app.innerHTML=`<div class="eyebrow">YOUR LEADERSHIP RESULT</div><h1>${escapeHTML(participantName)}님의 리더십은<br><span style="color:var(--red)">${t.name}</span>입니다.</h1><p>${t.subtitle}</p><div class="result-card"><div class="eyebrow">나의 유형 분포</div>${bars}<div class="insight"><b>나의 강점</b><p>${t.strength}</p></div><div class="insight"><b>주의할 점</b><p>${t.caution}</p></div><div class="insight"><b>세종에게 배우는 리더십</b><p>${t.lesson}</p></div><div class="insight"><b>오늘 나에게 던지는 질문</b><p style="font-weight:800;color:#242321">“${t.question}”</p></div><div class="insight"><b>이번 주 작은 실천</b><p>${t.action}</p></div></div><button class="primary" onclick="makeImage()">결과 이미지 만들기 · 저장하기</button><button class="secondary" onclick="index=-1;participantName='';render()">처음부터 다시 진단하기</button><p class="foot">세종의 통치에서 착안한 교육용 유형 분류입니다.<br>동점일 경우 문항 선택 순서와 유형 순서에 따라 대표 유형을 표시합니다.</p><p class="foot">원작자 : 배하연 · <a href="https://litt.ly/hayeon1446" target="_blank" rel="noopener noreferrer" style="color:#a73338;text-decoration:underline;font-weight:700">litt.ly/hayeon1446</a></p><div id="imageArea"></div>`}
-async function makeImage(){try{await document.fonts.ready}catch(e){}const c=document.getElementById('saveCanvas'),ctx=c.getContext('2d');const {counts,t}=resultData;ctx.fillStyle='#fbf8f3';ctx.fillRect(0,0,1080,1280);ctx.fillStyle='#a73338';ctx.fillRect(0,0,1080,20);ctx.textBaseline='top';ctx.fillStyle='#a73338';ctx.font='bold 34px "Noto Sans KR",sans-serif';ctx.fillText('SEJONG LEADERSHIP TEST',75,65);ctx.fillStyle='#292725';ctx.font='bold 70px "Noto Sans KR",sans-serif';ctx.font='bold 57px "Noto Sans KR",sans-serif';ctx.fillText(participantName+'님의 리더십은',75,123);ctx.fillStyle='#a73338';ctx.font='bold 96px "Noto Sans KR",sans-serif';ctx.fillText(t.name+'입니다',75,205);ctx.fillStyle='#5f5a55';ctx.font='34px "Noto Sans KR",sans-serif';ctx.fillText(t.subtitle,75,325);ctx.strokeStyle='#e2d8ce';ctx.beginPath();ctx.moveTo(75,395);ctx.lineTo(1005,395);ctx.stroke();const labels=['경청형','성장형','판단형','혁신형'];counts.forEach((n,i)=>{let y=450+i*70;ctx.fillStyle='#34312e';ctx.font='bold 29px "Noto Sans KR",sans-serif';ctx.fillText(labels[i],75,y);ctx.fillStyle='#e9e2db';ctx.fillRect(225,y+7,660,24);ctx.fillStyle='#a73338';ctx.fillRect(225,y+7,660*n/12,24);ctx.fillStyle='#34312e';ctx.fillText(n+'/12',915,y)});function wrap(text,x,y,maxWidth,lineHeight,maxLines=3){let line='',lines=0;for(const char of text){if(ctx.measureText(line+char).width>maxWidth){ctx.fillText(line,x,y+lines*lineHeight);line=char;lines++;if(lines>=maxLines)return y+(lines+1)*lineHeight}else line+=char}ctx.fillText(line,x,y+lines*lineHeight);return y+(lines+1)*lineHeight}let y=780;function block(label,value){ctx.fillStyle='#a73338';ctx.font='bold 29px "Noto Sans KR",sans-serif';ctx.fillText(label,75,y);y+=48;ctx.fillStyle='#34312e';ctx.font='29px "Noto Sans KR",sans-serif';y=wrap(value,75,y,925,45,3)+34}block('나의 강점',t.strength);block('성장을 위한 질문','“'+t.question+'”');ctx.fillStyle='#93877d';ctx.font='25px "Noto Sans KR",sans-serif';ctx.fillText('원작자 : 배하연  |  litt.ly/hayeon1446',75,1230);const url=c.toDataURL('image/png');document.getElementById('imageArea').innerHTML=`<img id="preview" alt="저장할 결과 이미지" src="${url}"><a class="download" download="${escapeHTML(participantName)}_세종_리더십_${t.name}.png" href="${url}">PNG 이미지 저장하기 ↓</a><p class="small">휴대전화에서 저장 버튼을 누르거나 이미지를 길게 눌러 저장할 수 있습니다.</p>`;document.getElementById('imageArea').scrollIntoView({behavior:'smooth'})}render();</script></body></html>
+const N=QS.length;
+let idx=-1, sel=new Array(N).fill(null), res=null;
+const app=document.getElementById('app');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toTop(){window.scrollTo({top:0,behavior:'auto'})}
+
+function score(s){
+  if(!Array.isArray(s)||s.length!==N||!s.every(a=>Number.isInteger(a)&&a>=0&&a<=3)) return null;
+  const sc={Q:0,L:0,S:0,T:0};
+  s.forEach((c,i)=>{sc[QS[i][1][c][0]]+=1});
+  const max=Math.max(...TYPES.map(t=>sc[t]));
+  const tops=TYPES.filter(t=>sc[t]===max);
+  return {scores:sc,topTypes:tops,mixed:tops.length>1};
+}
+
+function intro(){
+  app.innerHTML=`<section>
+  <div class="eyebrow">SEJONG LEADERSHIP</div>
+  <h1>세종이라면,<br>나는 어떤 리더일까?</h1>
+  <p class="lead">나의 소통 습관을 발견하고, 내일 바꿀 행동 하나 찾기</p>
+  <div class="guide">세종의 리더십을 배운 지금, 나의 소통 습관도 살펴봅니다.<br><br>10개의 짧은 업무 상황을 읽고, <b>내가 실제로 가장 먼저 할 법한 행동</b>을 골라주세요. 정답도, 더 높은 유형도 없습니다.</div>
+  <div class="meta"><span>10문항</span><span>약 5–7분</span><span>로그인·이름 입력 없음</span></div>
+  <button class="btn" onclick="go(0)">내 리더십 살펴보기 →</button>
+  <p class="notice">교육용 자기성찰 도구입니다. 성격이나 역량을 진단하는 검증된 심리검사는 아닙니다. 응답은 이 휴대폰 화면 안에서만 계산되며 어디에도 저장·전송되지 않습니다.</p>
+  </section>`;
+}
+
+function question(){
+  const [q,opts]=QS[idx], cur=sel[idx], last=idx===N-1;
+  app.innerHTML=`<section>
+  <div class="top"><span>상황 ${idx+1}</span><strong>${idx+1} / ${N}</strong></div>
+  <div class="bar"><div style="width:${(idx+1)/N*100}%"></div></div>
+  <h2>${esc(q)}</h2>
+  <div role="group" aria-label="선택지">
+  ${opts.map((o,i)=>`<button class="choice" aria-pressed="${cur===i}" onclick="pick(${i})"><span class="k">${'ABCD'[i]}</span>${esc(o[1])}</button>`).join('')}
+  </div>
+  <div class="nav">
+    <button class="btn line prev" onclick="go(${idx-1})">← 이전</button>
+    <button class="btn" id="next" ${cur===null?'disabled':''} onclick="next()">${last?'결과 보기':'다음 →'}</button>
+  </div>
+  </section>`;
+}
+
+function pick(i){
+  sel[idx]=i;
+  document.querySelectorAll('.choice').forEach((b,j)=>b.setAttribute('aria-pressed',j===i));
+  document.getElementById('next').disabled=false;
+}
+function next(){
+  if(sel[idx]===null) return;
+  if(idx<N-1){go(idx+1);return}
+  const firstMissing=sel.findIndex(v=>v===null);
+  if(firstMissing>=0){go(firstMissing);return}
+  res=score(sel); if(!res){go(0);return}
+  result(); toTop();
+}
+function go(i){ idx=i; if(idx<0){intro()}else{question()} toTop(); }
+
+function typeCard(t){
+  const p=P[t];
+  return `<div class="card">
+   <div class="tname">${p.name}</div>
+   <div class="headline">${p.headline}</div>
+   <div class="item"><b>내가 잘하는 방식</b><p>${p.strength}</p></div>
+   <div class="item"><b>이런 상황에서 도움이 됩니다</b><p>${p.when}</p></div>
+   <div class="item"><b>이럴 때는 다른 방식도 필요합니다</b><p>${p.caution}</p></div>
+   <div class="item"><b>세종에게서 배우기</b><p>${p.sejong}</p><span class="src">출처: ${p.link?`<a href="${p.link}" target="_blank" rel="noopener noreferrer">${p.src}</a>`:p.src}</span></div>
+   <div class="item"><b>내일부터 바꿀 말 한마디</b><p class="say">${p.say}</p></div>
+   <div class="item"><b>조원과 이야기해보기</b><p>${p.ask}</p></div>
+  </div>`;
+}
+
+function result(){
+  const {scores,topTypes,mixed}=res;
+  const names=topTypes.map(t=>P[t].name);
+  const head=mixed
+    ? `<h1>나에게는 두 가지 이상의<br><span>익숙한 방식</span>이 있습니다</h1><p class="sub">${names.join(' · ')}</p>`
+    : `<h1>나의 익숙한 리더십 방식은<br><span>${names[0]}</span></h1>`;
+  const others=mixed
+    ? `<div class="mix">여러 방식을 비슷하게 쓰고 있습니다. 어느 쪽이 더 낫다는 뜻이 아니라, 상황에 따라 자연스럽게 꺼내는 방식이 둘 이상이라는 뜻입니다.</div>`
+    : `<div class="mix">나머지 세 가지 방식도 상황에 따라 도움이 됩니다. 조원들의 결과에서 내가 덜 쓰는 방식을 살펴보세요.</div>`;
+  app.innerHTML=`<section>
+  <div class="eyebrow">MY LEADERSHIP</div>
+  <div class="result-head">${head}</div>
+  <p class="sub">이 유형이 더 우수하다는 뜻이 아니라, 지금 상황에서 내가 자주 선택하는 행동 방식입니다.</p>
+  ${others}
+  <div class="dist" aria-label="선택 분포">${TYPES.map(t=>`<div class="${topTypes.includes(t)?'on':''}"><strong>${scores[t]}</strong>${P[t].name.split(' ').pop()}</div>`).join('')}</div>
+  ${topTypes.map(typeCard).join('')}
+  <div class="group">
+    <div class="eyebrow">4인 조 대화</div>
+    <h3>같은 세종을 배워도,<br>우리의 강점은 다릅니다.</h3>
+    <p class="how">4명씩, 각자 1분 이내로 이야기해 주세요. 결과 공개는 자율입니다.</p>
+    <ol>
+      <li>제 결과에서 가장 공감되는 강점은 <span class="blank"></span> 입니다.</li>
+      <li>다른 조원의 방식이 내 방식보다 더 효과적일 상황은 <span class="blank"></span> 입니다.</li>
+    </ol>
+    <p class="end">마무리 — <b>내일부터 팀에서 바꿀 말 한마디</b>를 한 명씩 말해 주세요.</p>
+  </div>
+  <button class="btn" onclick="makeImage()">결과 이미지 저장</button>
+  <button class="btn line" onclick="copyText()">텍스트 복사</button>
+  <button class="btn line" onclick="restart()">다시 해보기</button>
+  <div id="imageArea"></div>
+  <p class="foot">교육용 자기성찰 활동입니다. 검증된 심리검사나 평가 도구가 아니며,<br>상사·동료 평가에 사용하지 않습니다.<br>만든 사람 : 배하연 · <a href="https://litt.ly/hayeon1446" target="_blank" rel="noopener noreferrer">litt.ly/hayeon1446</a></p>
+  </section>`;
+}
+
+function restart(){ sel=new Array(N).fill(null); res=null; go(-1); }
+
+function resultText(){
+  const {scores,topTypes,mixed}=res;
+  let s='[세종이라면, 나는 어떤 리더일까?]\n';
+  s+=mixed?`나에게는 두 가지 이상의 익숙한 방식이 있습니다: ${topTypes.map(t=>P[t].name).join(' · ')}\n`:`나의 익숙한 리더십 방식은 ${P[topTypes[0]].name}\n`;
+  s+=`선택 분포: ${TYPES.map(t=>P[t].name+' '+scores[t]).join(' / ')}\n`;
+  topTypes.forEach(t=>{const p=P[t];s+=`\n■ ${p.name} — ${p.headline}\n· 잘하는 방식: ${p.strength}\n· 도움이 되는 상황: ${p.when}\n· 다른 방식도 필요할 때: ${p.caution}\n· 세종에게서 배우기: ${p.sejong} (${p.src})\n· 내일부터 바꿀 말 한마디: ${p.say}\n· 조원과 이야기해보기: ${p.ask}\n`});
+  s+='\n교육용 자기성찰 활동이며 검증된 심리검사가 아닙니다.\nhttps://sejong-book.vercel.app/sejong';
+  return s;
+}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200)}
+async function copyText(){
+  const txt=resultText();
+  try{await navigator.clipboard.writeText(txt);toast('결과 텍스트를 복사했어요');return}catch(e){}
+  const ta=document.createElement('textarea');ta.value=txt;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+  let ok=false;try{ok=document.execCommand('copy')}catch(e){}
+  ta.remove();toast(ok?'결과 텍스트를 복사했어요':'복사가 안 되면 화면을 캡처해 주세요');
+}
+
+async function makeImage(){
+  try{await document.fonts.ready}catch(e){}
+  const c=document.getElementById('cv'),x=c.getContext('2d');
+  const F='"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif';
+  const W=1080,M=80,TW=W-M*2;
+  const {scores,topTypes,mixed}=res;
+  function lines(text,font,max){x.font=font;const out=[];let line='';for(const ch of text){if(x.measureText(line+ch).width>max&&line){out.push(line);line=ch.trim()?ch:''}else line+=ch}if(line)out.push(line);return out}
+  // layout pass then draw pass
+  function paint(draw){
+    let y=90;
+    const T=(txt,font,color,lh,max=TW)=>{const ls=lines(txt,font,max);if(draw){x.fillStyle=color;x.font=font;ls.forEach((l,i)=>x.fillText(l,M,y+i*lh))}y+=ls.length*lh;};
+    if(draw){x.fillStyle='#FAF8F3';x.fillRect(0,0,W,c.height);x.fillStyle='#8F2525';x.fillRect(0,0,W,16);x.textBaseline='top'}
+    T('세종이라면, 나는 어떤 리더일까?',`700 32px ${F}`,'#8F2525',44);y+=26;
+    if(mixed){T('나에게는 두 가지 이상의 익숙한 방식이 있습니다',`700 40px ${F}`,'#202020',56);y+=8;T(topTypes.map(t=>P[t].name).join(' · '),`800 54px ${F}`,'#8F2525',72)}
+    else{T('나의 익숙한 리더십 방식은',`700 40px ${F}`,'#202020',56);y+=8;T(P[topTypes[0]].name,`800 76px ${F}`,'#8F2525',96)}
+    y+=24;
+    const bw=(TW-36)/4;
+    if(draw){TYPES.forEach((t,i)=>{const bx=M+i*(bw+12);x.fillStyle='#fff';x.strokeStyle=topTypes.includes(t)?'#8F2525':'#E6E0D6';x.lineWidth=3;x.beginPath();x.roundRect?x.roundRect(bx,y,bw,120,18):x.rect(bx,y,bw,120);x.fill();x.stroke();x.textAlign='center';x.fillStyle=topTypes.includes(t)?'#8F2525':'#202020';x.font=`800 44px ${F}`;x.fillText(String(scores[t]),bx+bw/2,y+18);x.fillStyle='#666';x.font=`500 26px ${F}`;x.fillText(P[t].name.split(' ').pop(),bx+bw/2,y+76);x.textAlign='left'})}
+    y+=160;
+    topTypes.forEach(t=>{const p=P[t];
+      if(draw){x.fillStyle='#E6E0D6';x.fillRect(M,y,TW,2)}y+=34;
+      T(p.headline,`800 44px ${F}`,'#202020',60);y+=14;
+      T(p.strength,`400 30px ${F}`,'#333333',46);y+=22;
+      T('내일부터 바꿀 말 한마디',`700 28px ${F}`,'#8F2525',42);y+=6;
+      T(p.say,`700 34px ${F}`,'#202020',50);y+=34;
+    });
+    y+=10;T('교육용 자기성찰 활동 · sejong-book.vercel.app/sejong',`400 24px ${F}`,'#999999',36);
+    return y+60;
+  }
+  c.height=Math.max(1080,Math.ceil(paint(false)));
+  paint(true);
+  let url;try{url=c.toDataURL('image/png')}catch(e){url=null}
+  const area=document.getElementById('imageArea');
+  if(!url){area.innerHTML='<p class="small">이 브라우저에서는 이미지 저장이 어려워요. 화면을 캡처하거나 텍스트 복사를 이용해 주세요.</p>';return}
+  const fname='세종리더십_'+topTypes.map(t=>P[t].name.replace(/\s/g,'')).join('_')+'.png';
+  area.innerHTML=`<img alt="저장할 결과 이미지" src="${url}"><a class="btn" style="text-align:center;text-decoration:none" download="${esc(fname)}" href="${url}">PNG로 저장하기 ↓</a><p class="small">휴대폰에서는 이미지를 길게 눌러 저장할 수도 있어요.<br>저장이 안 되면 화면을 캡처해 주세요.</p>`;
+  area.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+intro();
+</script>
+</body>
+</html>
